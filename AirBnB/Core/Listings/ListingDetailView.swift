@@ -10,12 +10,6 @@ import MapKit
 
 struct ListingDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    var images = [
-        "listing-1",
-        "listing-2",
-        "listing-3",
-        "listing-4",
-    ]
     
     var body: some View {
         ScrollView {
@@ -34,6 +28,7 @@ struct ListingDetailView: View {
                                 .frame(width: 32, height: 32)
                         )
                         .padding(32)
+                        .padding(.vertical, 40)
                 }
 
             }
@@ -170,7 +165,7 @@ struct ListingDetailView: View {
             }
             .padding()
         }
-        .toolbarVisibility(.hidden, for: .navigationBar)
+        .toolbarVisibility(.hidden, for: .navigationBar, .tabBar)
         .padding(.bottom, 118)
         .ignoresSafeArea()
         .overlay(alignment: .bottom) {
