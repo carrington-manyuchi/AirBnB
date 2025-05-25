@@ -30,7 +30,7 @@ struct ListingItemView: View {
                         .foregroundStyle(.gray)
                     
                     HStackLayout(spacing: 4) {
-                        Text("R\(listing.pricePerNight)")
+                        Text("\(listing.pricePerNight  as NSNumber, formatter: NumberFormatter.currency)")
                             .fontWeight(.semibold)
                         Text("night")
                     }

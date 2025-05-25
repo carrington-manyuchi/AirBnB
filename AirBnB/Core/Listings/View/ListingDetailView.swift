@@ -187,7 +187,7 @@ struct ListingDetailView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("R\(listing.pricePerNight)")
+                        Text("\(listing.pricePerNight as NSNumber, formatter: NumberFormatter.currency)")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                         
