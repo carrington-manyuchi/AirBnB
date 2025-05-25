@@ -22,7 +22,7 @@ extension CLLocationCoordinate2D {
     ]
     
     static func regionForCity(_ name: String) -> CLLocationCoordinate2D {
-        let key = name.lowercased().replacingOccurrences(of: " ", with: "")
+        //let key = name.lowercased().replacingOccurrences(of: " ", with: "")
         return cityCoordinates[name] ??  CLLocationCoordinate2D(latitude: 34.052234, longitude: -118.243685)
     }
 }

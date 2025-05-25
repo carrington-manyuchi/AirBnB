@@ -9,6 +9,9 @@ import Foundation
 
 class ExploreViewModel: ObservableObject {
     @Published var listings = [Listing]()
+    @Published var searchLocation: String = ""
+    private var listingsCopy: [Listing] = [Listing]()
+
     private let service: ExploreService
     
     init(service: ExploreService) {
@@ -21,15 +24,16 @@ class ExploreViewModel: ObservableObject {
     func fetchListings() async {
         do {
             self.listings = try await service.fetchListings()
+            self.listingsCopy = self.listings
         } catch {
             print("Error fetching listings: \(error.localizedDescription)")
         }
     }
     
-    func updateListingsForLocation(_ location: String) {
+    func updateListingsForLocation() {
         let filteredListings = listings.filter ({
-            $0.city.lowercased() == location.lowercased() || $0.state.lowercased() == location.lowercased()
+            $0.city.lowercased() == searchLocation.lowercased() || $0.state.lowercased() == searchLocation.lowercased()
         })
-        self.listings = filteredListings.isEmpty ? listings : filteredListings
+        self.listings = filteredListings.isEmpty ? listingsCopy : filteredListings
     }
 }

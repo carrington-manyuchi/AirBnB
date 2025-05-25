@@ -15,7 +15,7 @@ enum DestinationSearchOptions {
 
 struct DestinationSearchView: View {
     @Binding var show: Bool
-    @State private var destination: String = ""
+    @ObservedObject var viewModel: ExploreViewModel
     @State private var selectedOption: DestinationSearchOptions = .location
     @State private var startDate: Date  = Date()
     @State private var endDate: Date  = Date()
@@ -26,6 +26,7 @@ struct DestinationSearchView: View {
             HStack {
                 Button {
                     withAnimation(.snappy) {
+                        viewModel.updateListingsForLocation()
                         show.toggle()
                     }
                 } label: {
@@ -34,9 +35,10 @@ struct DestinationSearchView: View {
                         .foregroundStyle(.black)
                 }
                 Spacer()
-                if !destination.isEmpty {
+                if !viewModel.searchLocation.isEmpty {
                     Button {
-                        destination = ""
+                        viewModel.searchLocation = ""
+                        viewModel.updateListingsForLocation()
                     } label: {
                         Text("Clear")
                     }
@@ -57,8 +59,14 @@ struct DestinationSearchView: View {
                         Image(systemName: "magnifyingglass")
                             .imageScale(.small)
                         
-                        TextField("Search destinations", text: $destination)
+                        TextField("Search destinations", text: $viewModel.searchLocation)
                             .font(.subheadline)
+                            .submitLabel(.search)
+                            .autocorrectionDisabled()
+                            .onSubmit {
+                                viewModel.updateListingsForLocation()
+                                show.toggle()
+                            }
                     }
                     .frame(height: 44)
                     .padding(.horizontal)
@@ -139,7 +147,7 @@ struct DestinationSearchView: View {
 }
 
 #Preview {
-    DestinationSearchView(show: .constant(false))
+    DestinationSearchView(show: .constant(false), viewModel: ExploreViewModel(service: ExploreService()))
 }
 
 struct CollapsibleDestinationViewModifier: ViewModifier {
