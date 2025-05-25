@@ -8,6 +8,8 @@
 import Foundation
 
 class DeveloperPreview {
+    static let shared = DeveloperPreview()
+
     var listings: [Listing] = [
         .init(
             id: NSUUID().uuidString,
@@ -35,7 +37,7 @@ class DeveloperPreview {
             id: NSUUID().uuidString,
             ownerUid: NSUUID().uuidString,
             ownerName: "Carrington Johnson",
-            ownerImageUrl: "male-profile-photo",
+            ownerImageUrl: "carrington",
             numberOfBedrooms: 4,
             numberOfBathrooms: 3,
             numberOfGuests: 4,
@@ -79,7 +81,7 @@ class DeveloperPreview {
             id: NSUUID().uuidString,
             ownerUid: NSUUID().uuidString,
             ownerName: "Kamila Johnson",
-            ownerImageUrl: "female-profile-photo",
+            ownerImageUrl: "carrington",
             numberOfBedrooms: 4,
             numberOfBathrooms: 3,
             numberOfGuests: 4,
@@ -101,7 +103,7 @@ class DeveloperPreview {
             id: NSUUID().uuidString,
             ownerUid: NSUUID().uuidString,
             ownerName: "Kamila Johnson",
-            ownerImageUrl: "male-profile-photo",
+            ownerImageUrl: "carrington",
             numberOfBedrooms: 4,
             numberOfBathrooms: 3,
             numberOfGuests: 4,

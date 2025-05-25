@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ExploreView: View {
-    
     @State private var showDestinationSearchView = false
+    @StateObject var viewModel: ExploreViewModel = ExploreViewModel(service: ExploreService())
     
     var body: some View {
         NavigationStack {
@@ -17,7 +17,6 @@ struct ExploreView: View {
             if showDestinationSearchView {
                 DestinationSearchView(show: $showDestinationSearchView)
             } else {
-                    
                     SearchAndFilterBar()
                         .onTapGesture {
                         withAnimation(.snappy) {
@@ -27,14 +26,14 @@ struct ExploreView: View {
                 ScrollView {
 
                     LazyVStack(spacing: 32) {
-                        ForEach(0...10, id: \.self) { listing in
+                        ForEach(viewModel.listings) { listing in
                             NavigationLink(value: listing) {
-                                ListingItemView()
+                                ListingItemView(listing: listing)
                             }
                         }
                     }
-                    .navigationDestination(for: Int.self) { listing in
-                        ListingDetailView()
+                    .navigationDestination(for: Listing.self) { listing in
+                        ListingDetailView(listing: listing)
                             .navigationBarBackButtonHidden()
                     }
                     

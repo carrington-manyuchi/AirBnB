@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Listing: Identifiable, Codable {
+struct Listing: Identifiable, Codable, Hashable {
     let id: String
     let ownerUid: String
     let ownerName: String
@@ -112,7 +112,7 @@ enum ListingAmenities: Int, Codable, Identifiable, Hashable {
             case .tv:
             return "tv"
         case .alarmSystem:
-            return "checkboard.shield"
+            return "shield.checkerboard"
         case .office:
             return "pencil.and.ruler.fill"
         case .balcony:

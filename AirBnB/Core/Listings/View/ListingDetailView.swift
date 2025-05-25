@@ -9,12 +9,24 @@ import SwiftUI
 import MapKit
 
 struct ListingDetailView: View {
+    let listing: Listing
+    @State private var cameraPosition: MapCameraPosition
     @Environment(\.dismiss) private var dismiss
+
+    init(listing: Listing) {
+        self.listing = listing
+        let center = CLLocationCoordinate2D.regionForCity(listing.city)
+        let region = MKCoordinateRegion(
+            center: center,
+            span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        )
+        self._cameraPosition = State(initialValue: .region(region))
+    }
     
     var body: some View {
         ScrollView {
             ZStack(alignment: .topLeading) {
-                ListingImageCarouselView()
+                ListingImageCarouselView(imageURLs: listing.imageURLs)
                     .frame(height: 350)
                 
                 Button {
@@ -30,17 +42,17 @@ struct ListingDetailView: View {
                         .padding(32)
                         .padding(.vertical, 40)
                 }
-
             }
             
             VStack(alignment: .leading,spacing: 8) {
-                Text("Fourways, Sandton")
+                Text("\(listing.title)")
                     .font(.title)
                     .fontWeight(.semibold)
                 
                 VStack(alignment: .leading, spacing: 2) {
                     HStack {
-                        StarRatingView()
+                      //  StarRatingView()
+                        StarRatingView(rating: listing.rating)
                         Text("-")
                         Text("28 reviews")
                             .underline()
@@ -48,7 +60,7 @@ struct ListingDetailView: View {
                     }
                     .foregroundStyle(.black)
 
-                    Text("Fourways, Sandton")
+                    Text("\(listing.city), \(listing.state)")
                         .foregroundStyle(.secondary)
                 }
                 .font(.caption)
@@ -60,21 +72,21 @@ struct ListingDetailView: View {
             
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Find accomodation at the heart of Sandton")
+                    Text("Entire \(listing.type.description) hosted by \(listing.ownerName)")
                         .font(.headline)
                         .frame(width: 250, alignment: .leading)
                         .fontWeight(.semibold)
                     
                     HStack(spacing: 2) {
-                        Text("4 guests -")
-                        Text("4 bedrooms -")
-                        Text("3 baths")
+                        Text("\(listing.numberOfGuests) guests -")
+                        Text("\(listing.numberOfBedrooms) bedrooms -")
+                        Text("\(listing.numberOfBathrooms) baths")
                     }
                     .font(.caption)
                 }
                 Spacer()
                 
-                Image("carrington")
+                Image("\(listing.ownerImageUrl)")
                     .resizable()
                     .scaledToFill()
                     .clipShape(Circle())
@@ -86,15 +98,15 @@ struct ListingDetailView: View {
             Divider()
             
             VStack(alignment: .leading, spacing: 16) {
-                ForEach(0..<2) { feature in
+                ForEach(listing.features) { feature in
                     HStack {
-                        Image(systemName: "medal")
+                        Image(systemName: feature.imageName)
                         
                         VStack(alignment: .leading) {
-                            Text("Superhost")
+                            Text(feature.title)
                                 .font(.footnote)
                                 .fontWeight(.semibold)
-                            Text("Superhost are experienced, highly rated hosts wwho are commited to providing great stars for guests")
+                            Text(feature.subtitle)
                                 .font(.caption)
                                 .foregroundStyle(.gray)
                         }
@@ -113,7 +125,7 @@ struct ListingDetailView: View {
                 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
-                        ForEach(1..<5) { bedroom in
+                        ForEach(1...listing.numberOfBedrooms, id: \.self) { bedroom in
                             VStack {
                                 Image(systemName: "bed.double")
                                 Text("Bedroom \(bedroom)")
@@ -140,12 +152,12 @@ struct ListingDetailView: View {
             VStack(alignment: .leading,spacing: 16) {
                 Text("What this place offers")
                 
-                ForEach(0..<5) { feature in
+                ForEach(listing.amenities) { amenity in
                     HStack {
-                        Image(systemName: "wifi")
+                        Image(systemName: amenity.imageName)
                             .frame(width: 32)
                         
-                        Text("Wifi")
+                        Text(amenity.title)
                             .font(.footnote)
                         Spacer()
                     }
@@ -159,7 +171,7 @@ struct ListingDetailView: View {
                 Text("Where you'll be")
                     .font(.headline)
                 
-                Map()
+                Map(position: $cameraPosition)
                     .frame(height: 250)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
             }
@@ -175,7 +187,7 @@ struct ListingDetailView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("R3590")
+                        Text("R\(listing.pricePerNight)")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                         
@@ -210,5 +222,5 @@ struct ListingDetailView: View {
 }
 
 #Preview {
-    ListingDetailView()
+    ListingDetailView(listing: DeveloperPreview.shared.listings[4])
 }
